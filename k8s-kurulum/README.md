@@ -73,16 +73,16 @@ Not: aşağıdaki kullanıcıların şifresi değiştirilirse gitops reposundaki
 - gitlab'da kullanıcı açılması ve gitlab k8s grubuna maintainer olarak eklenmesi
 
         Kullanıcı : k8s-cicd
-        Şifre: QQaIBtP3x8txQxD
+        Şifre: xxxxxxxxxx8txQxD
 
 - gitlab k8s-cicd kullanıcısının api ve read_api yetkisine sahip access token oluşturulması. (flux kurulumunda kullanılacak.)
 
-        glpat-zTT2FsxxLJiUBYJUTi1k
+        xxxxx-zTT2FsxxLJiUBYJUTi1k
 
 - nexus'da aşağıdaki kullanıcıları açıp k8s-cicd kullanıcısına bütün maven, npm, docker vs. repolarında admin yetkisi, k8s-cicd-read kullanıcısına docker read yetkisi verilmesi.
 
         Kullanıcı: k8s-cicd
-        Şifre: QQaIBtP3x8txQxD
+        Şifre: xxxxxxxxxx8txQxD
 
         Kullanıcı: k8s-cicd-read 
         Şifre: ttt3RfunrsXo6KE
