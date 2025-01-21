@@ -1,20 +1,20 @@
 # Sunucu Envanteri
 
-        10.101.58.100 ansible
-        10.101.58.10 k8s-master-node-1
-        10.101.58.11 k8s-master-node-2
-        10.101.58.12 k8s-master-node-3
-        10.101.58.20 k8s-worker-node-1
-        10.101.58.21 k8s-worker-node-2
-        10.101.58.22 k8s-worker-node-3
-        10.101.58.23 k8s-worker-node-4
-        10.101.58.24 k8s-worker-node-5
+        192.168.1.100 ansible
+        192.168.1.10 k8s-master-node-1
+        192.168.1.11 k8s-master-node-2
+        192.168.1.12 k8s-master-node-3
+        192.168.1.20 k8s-worker-node-1
+        192.168.1.21 k8s-worker-node-2
+        192.168.1.22 k8s-worker-node-3
+        192.168.1.23 k8s-worker-node-4
+        192.168.1.24 k8s-worker-node-5
 
 # Ansible sunucusundan ssh keylerin atılması
 
 - Ansible sunucusuna girin
 
-        ssh 10.101.58.100
+        ssh 192.168.1.100
 
 - SSH Anahtarının Oluşturulması:
 Ansible sunucusunda bir SSH anahtarı yoksa, aşağıdaki komutla oluşturabilirsiniz:
@@ -23,14 +23,14 @@ Ansible sunucusunda bir SSH anahtarı yoksa, aşağıdaki komutla oluşturabilir
 
 - SSh Anahtarlarının dağıtılması
 
-        ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.101.58.10
-        ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.101.58.11
-        ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.101.58.12
-        ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.101.58.20
-        ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.101.58.21
-        ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.101.58.22
-        ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.101.58.23
-        ssh-copy-id -i ~/.ssh/id_rsa.pub root@10.101.58.24
+        ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.1.10
+        ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.1.11
+        ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.1.12
+        ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.1.20
+        ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.1.21
+        ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.1.22
+        ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.1.23
+        ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.1.24
 
 # Gerekli paketlerin kurulması
 
@@ -56,7 +56,7 @@ Ansible sunucusunda bir SSH anahtarı yoksa, aşağıdaki komutla oluşturabilir
 
         ansible-playbook -i inventory/test-ozgur/hosts.yml cluster.yml 
         mkdir ~/.kube
-        scp 10.101.58.10:~/.kube/config ~/.kube/
+        scp 192.168.1.10:~/.kube/config ~/.kube/
         
 - kubeconfig dosyasını açıp master ip adresini gir.
 
@@ -77,7 +77,7 @@ Not: aşağıdaki kullanıcıların şifresi değiştirilirse gitops reposundaki
 
 - gitlab k8s-cicd kullanıcısının api ve read_api yetkisine sahip access token oluşturulması. (flux kurulumunda kullanılacak.)
 
-        xxxxx-zTT2FsxxLJiUBYJUTi1k
+        xxxxx-xxxxxxxxxxxxxx1k
 
 - nexus'da aşağıdaki kullanıcıları açıp k8s-cicd kullanıcısına bütün maven, npm, docker vs. repolarında admin yetkisi, k8s-cicd-read kullanıcısına docker read yetkisi verilmesi.
 
