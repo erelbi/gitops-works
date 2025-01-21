@@ -107,7 +107,7 @@ Not: aşağıdaki kullanıcıların şifresi değiştirilirse gitops reposundaki
         cp -pr k8s-kurulum/manifests flux-test-ozgur/
         cd ~/flux-test-ozgur
         git config --global user.email "k8s-cd-cd@noreply.com"
-        git config --global user.name "Takbis CI/CD"
+        git config --global user.name "k8s CI/CD"
         git add . && git commit -m "gitops resourceları init"
         git push
 
@@ -115,7 +115,7 @@ Not: aşağıdaki kullanıcıların şifresi değiştirilirse gitops reposundaki
 
         kubectl get kustomizations -A
         NAMESPACE     NAME          AGE    READY   STATUS
-        flux-system   flux-system   5m9s   True    Applied revision: main@sha1:47efee404dc00ce0e3d9450c7964c25bea189f64
+        flux-system   flux-system   5m9s   True    Applied revision: main@sha1:47ei4
 
 - jenkins deployları için oluşturulmuş service accountun tokenını al
 
