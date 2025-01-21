@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jenkins-test-dev-token
+  namespace: yazilim-test-dev
+  annotations:
+    kubernetes.io/service-account.name: jenkins-robot-test-dev
+type: kubernetes.io/service-account-token
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins-robot-test-dev
+  namespace: yazilim-test-dev
+automountServiceAccountToken: true
+secrets:
+  - name: jenkins-test-dev-token
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: yazilim-test-dev-token
+  namespace: yazilim-test-dev
+  annotations:
+    kubernetes.io/service-account.name: yazilim-test-dev
+type: kubernetes.io/service-account-token
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: yazilim-test-dev
+  namespace: yazilim-test-dev
+automountServiceAccountToken: true
+secrets:
+  - name: yazilim-test-dev-token

@@ -1,0 +1,246 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-values
+  namespace: jenkins
+data:
+  values.yaml: |
+    jenkins:
+
+      # Enable Jenkins instance
+      enabled: true
+
+      # Jenkins instance API version
+      apiVersion: jenkins.io/v1alpha2
+
+      # Jenkins resource name
+      name: jenkins
+
+      # Namespace for Jenkins deployment
+      namespace: jenkins
+
+      # Jenkins image
+      image: jenkins/jenkins:2.440
+      imagePullPolicy: Always
+
+      # Resources configuration
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 4Gi  # Belleği artırdım
+        requests:
+          cpu: 500m
+          memory: 2Gi
+
+      # Volumes configuration
+      volumes:
+        - name: backup
+          persistentVolumeClaim:
+            claimName: jenkins-backup
+
+      # Persistent Volume Claims (PVCs)
+      persistence:
+          - name: jenkins-backup
+            persistentVolumeClaim:
+              storageClassName: nfs-client
+              accessModes:
+                - ReadWriteMany
+              resources:
+                requests:
+                  storage: 1Gi  # Yedekleme alanı için artırıldı
+      env:
+        #- name: JENKINS_UC
+        #  value: https://updates.jenkins.io/update-center.json
+        #- name: JENKINS_UC_EXPERIMENTAL
+        #  value: https://updates.jenkins.io/experimental
+        #- name: JENKINS_PLUGIN_INFO
+        #  value: https://updates.jenkins.io/experimental/update-center.json
+        - name: JAVA_OPTS
+          value: >-
+            -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=80.0
+            -Djenkins.install.runSetupWizard=false -Djava.awt.headless=true
+            -Dhudson.model.ParametersAction.keepUndefinedParameters=true
+      
+      #latestPlugins: true
+      #basePlugins: # Plugins don't auto update, you have to specify exact versions and there is not a forced version scheme
+      #  - name: kubernetes
+      #    version: "4054.v2da_8e2794884"
+      #  - name: workflow-job
+      #    version: "1360.vc6700e3136f5"
+      #  - name: workflow-aggregator
+      #    version: "596.v8c21c963d92d"
+      #  - name: git
+      #    version: "5.2.0"
+      #  - name: job-dsl
+      #    version: "1.87"
+      #  - name: configuration-as-code
+      #    version: "1714.v09593e830cfa"
+      #  - name: kubernetes-credentials-provider
+      #    version: "1.258.v95949f923a_a_e"
+      ## This section is optional, this is for user defined plugins.  I'll add a few just to get you going
+      #plugins:
+      #  - name: github-branch-source
+      #    version: "1741.va_3028eb_9fd21"
+      #  - name: blueocean
+      #    version: "1.27.9"
+
+      ## Base Plugins
+      #disableCSRFProtection: false
+      #basePlugins:
+      # - name: kubernetes
+      #   version: 4246.v5a_12b_1fe120e
+      # - name: workflow-job
+      #   version: 1400.v7fd111b_ec82f
+      # - name: workflow-aggregator
+      #   version: 596.v8c21c963d92d
+      # - name: git
+      #   version: 5.2.2
+      # - name: job-dsl
+      #   version: "1.87"
+      # - name: configuration-as-code
+      #   version: 1810.v9b_c30a_249a_4c
+      # - name: kubernetes-credentials-provider
+      #   version: 1.262.v2670ef7ea_0c5
+      basePlugins:
+        - name: kubernetes
+          version: 4246.v5a_12b_1fe120e
+        - name: docker-commons
+          version: 439.va_3cb_0a_6a_fb_29
+        - name: workflow-aggregator
+          version: 596.v8c21c963d92d
+        - name: workflow-job
+          version: 1400.v7fd111b_ec82f
+        - name: workflow-api
+          version: 1291.v51fd2a_625da_7
+        - name: git
+          version: 5.2.2
+        - name: job-dsl
+          version: '1.87'
+        - name: configuration-as-code
+          version: 1836.vccda_4a_122a_a_e
+        - name: kubernetes-credentials-provider
+          version: 1.262.v2670ef7ea_0c5
+        - name: simple-theme-plugin
+          version: 136.v23a_15f86c53d
+          #- name: oic-auth
+          #version: '2.5'
+        - name: kubernetes-cli
+          version: 1.12.1
+        - name: docker-workflow
+          version: 563.vd5d2e5c4007f
+        - name: mattermost
+          version: 3.1.2
+          #- name: nexus-jenkins-plugin
+          #version: 3.16.474.vb_0cdf4908780
+        - name: matrix-auth
+          version: 3.1.6
+        - name: authorize-project
+          version: 1.4.0
+          #- name: fortify
+          #version: 22.1.38
+        - name: http_request
+          version: '1.16'
+        - name: multiselect-parameter
+          version: '1.7'
+        - name: gitlab-plugin
+          version: 1.7.10
+        - name: pipeline-stage-view
+          version: '2.34'
+
+      # Seed Jobs Configuration
+      seedJobs:
+        - additionalClasspath: ''
+          bitbucketPushTrigger: false
+          buildPeriodically: ''
+          credentialID: jenkins-test-repo-admin
+          credentialType: usernamePassword
+          description: CI/CD Repository
+          failOnMissingPlugin: false
+          githubPushTrigger: false
+          id: test-job-repo
+          ignoreMissingFiles: false
+          pollSCM: ''
+          repositoryBranch: master
+          repositoryUrl: https://gitlab.tislemler.com.tr/yazilim/test_projects/cicd.git
+          targets: ci/jobs/*.job
+          unstableOnDeprecation: false
+
+      # Service Configuration
+      service:
+        port: 8080
+        type: ClusterIP
+
+      slaveService:
+        port: 50000
+        type: ClusterIP
+
+      serviceAccount: {}
+
+      # Backup configuration
+      backup:
+        enabled: true
+        image: quay.io/jenkins-kubernetes-operator/backup-pvc:v0.4.1
+        containerName: backup
+        interval: 86400 # Backup every 24 hours
+        makeBackupBeforePodDeletion: true
+        backupCommand:
+          - /home/user/bin/backup.sh
+        restoreCommand:
+          - /home/user/bin/restore.sh
+        pvc:
+          enabled: true
+          size: 1Gi  # Backup storage boyutu uyumlu hale getirildi
+          className: nfs-client
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 3Gi  # Backup işlemleri için artırıldı
+          requests:
+            cpu: 200m
+            memory: 1Gi
+        env:
+          - name: BACKUP_DIR
+            value: /backup
+          - name: JENKINS_HOME
+            value: /jenkins-home
+          - name: BACKUP_COUNT
+            value: "3" # keep only the 3 most recent backups
+        volumeMounts:
+          - name: jenkins-home
+            mountPath: /jenkins-home # Jenkins home volume
+          - mountPath: /backup # backup volume
+            name: backup
+
+      # Liveness and Readiness Probes
+      livenessProbe:
+        failureThreshold: 20
+        httpGet:
+          path: /login
+          port: http
+          scheme: HTTP
+        initialDelaySeconds: 100
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 8
+
+      readinessProbe:
+        failureThreshold: 60
+        httpGet:
+          path: /login
+          port: http
+          scheme: HTTP
+        initialDelaySeconds: 120
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 8
+
+    operator:
+      replicaCount: 1
+      image: quay.io/jenkins-kubernetes-operator/operator:v0.8.1
+      imagePullPolicy: IfNotPresent
+
+    cert-manager:
+      enabled: false
+
+    webhook:
+      enabled: false

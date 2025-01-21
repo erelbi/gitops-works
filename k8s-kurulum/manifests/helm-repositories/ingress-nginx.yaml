@@ -1,0 +1,8 @@
+# HelmRepository definition
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: ingress-nginx
+  namespace: flux-system
+spec:
+  url: https://repo.tislemler.com.tr/repository/helm-shared-repository/ingress-nginx

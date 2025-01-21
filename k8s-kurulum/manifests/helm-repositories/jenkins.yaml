@@ -1,0 +1,8 @@
+# HelmRepository definition
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: jenkins
+  namespace: flux-system
+spec:
+  url: https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/master/chart

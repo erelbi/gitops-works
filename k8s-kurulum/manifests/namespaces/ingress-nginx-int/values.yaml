@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-values
+  namespace: nginx
+data:
+  values.yaml: |
+    controller:
+      #image:
+      #  registry: xxx.yazilim.tislemler.com.tr
+      allowSnippetAnnotations: true
+      kind: DaemonSet
+      ingressClass: nginx
+      ingressClassResource:
+        name: nginx
+        controllerValue: "k8s.io/nginx"
+      service:
+        type: NodePort
+        nodePorts:
+          http: 30081
+          https: 30444
+      config:
+        use-forwarded-headers: "true"
+        enable-real-ip: "true"
+        ignore-invalid-headers: 'false'
+        log-format-upstream: '[$time_local] 
+            client_real_ip=$http_tsat_real_ip 
+            client=$remote_addr 
+            method=$request_method 
+            request_time=$request_time
+            request="$request" 
+            request_length=$request_length 
+            status=$status 
+            bytes_sent=$bytes_sent 
+            body_bytes_sent=$body_bytes_sent 
+            referer=$http_referer 
+            user_agent="$http_user_agent" 
+            proxy_upstream_name=$proxy_upstream_name
+            proxy_alternative_upstream_name=$proxy_alternative_upstream_name
+            upstream_addr=$upstream_addr 
+            upstream_response_length=$upstream_response_length
+            upstream_status=$upstream_status
+            upstream_response_time=$upstream_response_time 
+            upstream_connect_time=$upstream_connect_time 
+            upstream_header_time=$upstream_header_time
+            request_id=$req_id'
+      #admissionWebhooks:
+      #  patch:
+      #    image:
+      #      registry: xxx.yazilim.tislemler.com.tr
+    labels:
+      - "app.kubernetes.io/name: nginx"
+      - "app.kubernetes.io/part-of: nginx"
+    #imagePullSecrets:
+    #  - name: regcred

@@ -1,0 +1,89 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: jenkins-robot-test-dev-binding
+  namespace: yazilim-test-dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: namespace-admin
+subjects:
+  - kind: ServiceAccount
+    name: "jenkins-robot-test-dev"
+    namespace: yazilim-test-dev
+---
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: namespace-admin
+rules:
+  - verbs:
+      - '*'
+    apiGroups:
+      - '*'
+    resources:
+      - services
+      - pods
+      - pods/log
+      - deployments
+      - configmaps
+      - secrets
+      - daemonsets
+      - statefulsets
+      - cronjobs
+      - mongodbcommunity
+      - elasticsearches
+      - kibanas
+      - redisfailovers
+      - redis
+      - rabbitmqclusters
+      - solrclouds
+      - kafkaconnectors
+      - zookeeperclusters
+      - services
+      - serviceaccounts
+      - kafkas
+      - kafkatopics
+      - kafkatopics/status
+      - kafkausers
+      - kafkausers/status
+  - verbs:
+      - create
+    apiGroups:
+      - ''
+    resources:
+      - pods/exec
+  - verbs:
+      - get
+      - list
+      - watch
+      - patch
+      - create
+      - update
+    apiGroups:
+      - extensions
+      - networking.k8s.io
+      - ''
+    resources:
+      - ingresses
+  - verbs:
+      - get
+      - create
+      - list
+      - delete
+      - watch
+      - update
+    apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - rolebindings
+      - roles
+  - verbs:
+      - '*'
+    apiGroups:
+      - extensions
+      - networking.k8s.io
+      - ''
+    resources:
+      - persistentvolumeclaims
